@@ -49,7 +49,7 @@ public class Main {
                     s = scan.next();   
                 }
                 else{
-                    eof = false;
+                    eof = true;
                 }
                 while(!eof){
                     Recipe r1 = new Recipe();
@@ -62,16 +62,17 @@ public class Main {
                             i1.setAmount(d);
                             r1.addIngredient(i1);
                         }
+                        
                     }
                     catch(InputMismatchException e){
                         recipes.add(r1);
-
                     }
                     catch(NoSuchElementException e){
+                        recipes.add(r1);
                         eof = true;
                     }
                 }
-                if(recipes.size() > 1){
+                if(recipes.size() > 0 && recipes.get(recipes.size()-1).getIngredientNum() != 0){
                     if(!s.equals(recipes.get(recipes.size()-1).getIngredientAt(recipes.get(recipes.size()-1).getIngredientNum()-1).getName())){
                         Recipe r1 = new Recipe();
                         r1.setName(s);
@@ -142,7 +143,7 @@ public class Main {
                     s = scan.next();   
                 }
                 else{
-                    eof = false;
+                    eof = true;
                 }
                 while(!eof){
                     Recipe r1 = new Recipe();
@@ -155,16 +156,17 @@ public class Main {
                             i1.setAmount(d);
                             r1.addIngredient(i1);
                         }
+                        
                     }
                     catch(InputMismatchException e){
                         recipes.add(r1);
                     }
                     catch(NoSuchElementException e){
+                        recipes.add(r1);
                         eof = true;
                     }
-                    
                 }
-                if(recipes.size() > 1){
+                if(recipes.size() > 0 && recipes.get(recipes.size()-1).getIngredientNum() != 0){
                     if(!s.equals(recipes.get(recipes.size()-1).getIngredientAt(recipes.get(recipes.size()-1).getIngredientNum()-1).getName())){
                         Recipe r1 = new Recipe();
                         r1.setName(s);
@@ -176,6 +178,7 @@ public class Main {
                         r1.setName(s);
                         recipes.add(r1);
                 }
+                
                 if(recipes.size() == 0){
                     System.out.println("The saved recipes is empty, there's nothing to change.");
                 }
@@ -312,49 +315,55 @@ public class Main {
                 d = 0.0;
                 eof = false;
                 ArrayList<UsersIngredient> userRec = new ArrayList<UsersIngredient>();
-                for(int i = 1; i > 0; i++){
-                    if(scan.hasNext()){
-                        s = scan.next();   
-                    }
-                    else{
-                        eof = false;
-                    }
-                    while(!eof){
-                        Recipe r1 = new Recipe();
-                        try{
-                            r1.setName(s);
-                            while(true){
-                                s = scan.next();
-                                i1.setName(s);
-                                d = scan.nextDouble();
-                                i1.setAmount(d);
-                                r1.addIngredient(i1);
-                            }
-                        }
-                        catch(InputMismatchException e){
-                            recipes.add(r1);
-                        }
-                        catch(NoSuchElementException e){
-                            eof = true;
+                if(scan.hasNext()){
+                    s = scan.next();   
+                }
+                else{
+                    eof = true;
+                }
+                while(!eof){
+                    Recipe r1 = new Recipe();
+                    try{
+                        r1.setName(s);
+                        while(true){
+                            s = scan.next();
+                            i1.setName(s);
+                            d = scan.nextDouble();
+                            i1.setAmount(d);
+                            r1.addIngredient(i1);
                         }
                         
                     }
-                    if(recipes.size() > 0){
-                        if(!s.equals(recipes.get(recipes.size()-1).getIngredientAt(recipes.get(recipes.size()-1).getIngredientNum()-1).getName())){
-                            Recipe r1 = new Recipe();
-                            r1.setName(s);
-                            recipes.add(r1);
-                        }
+                    catch(InputMismatchException e){
+                        recipes.add(r1);
                     }
-                    else if(s.trim().length() != 0){
+                    catch(NoSuchElementException e){
+                        recipes.add(r1);
+                        eof = true;
+                    }
+                }
+                if(recipes.size() > 0 && recipes.get(recipes.size()-1).getIngredientNum() != 0){
+                    if(!s.equals(recipes.get(recipes.size()-1).getIngredientAt(recipes.get(recipes.size()-1).getIngredientNum()-1).getName())){
                         Recipe r1 = new Recipe();
-                            r1.setName(s);
-                            recipes.add(r1);
+                        r1.setName(s);
+                        recipes.add(r1);
                     }
-                    if(recipes.size() == 0){
-                        System.out.println("There's currently no saved recipes, and nothing to search from.");
-                    }
-                    else{
+                }
+                else if(s.trim().length() != 0){
+                    Recipe r1 = new Recipe();
+                        r1.setName(s);
+                        recipes.add(r1);
+                }
+                
+                if(recipes.size() == 0){
+                    System.out.println("There's currently no saved recipes, and nothing to search from.");
+                    break;
+                }
+                else{
+                    
+                }
+                for(int i = 1; i > 0; i++){
+                    
                         keyboard.nextLine();
                     System.out.println("Please enter the name for your ingredient number " + i + "(or enter -1 to stop): ");
                     s = keyboard.next();
@@ -378,7 +387,6 @@ public class Main {
                         }
                     }
                 }
-                
                 int highestMatch = -1;
                 int highestMatchIndex = -1;
                 for(int j = 0; j < recipes.size(); j ++){
@@ -403,15 +411,13 @@ public class Main {
                     System.out.println(recipes.get(highestMatchIndex));
                     System.out.println("\n Your ingredients:");
                     for(int j = 0; j < userRec.size(); j ++){
-                        if(userRec.get(i).getAmount() == 0){
+                        if(userRec.get(j).getAmount() == 0){
                             System.out.println((j+1)+ ". "+userRec.get(j).getName() + " is not included in the saved recipe.");
                             continue;
                         }
                         System.out.println((j+1) + ". "+ userRec.get(j).getName()+ ". Amount needed: " + userRec.get(j).getAmount() + ". And you have: " + userRec.get(j).getOnHand("S") + ". Has enough? " + userRec.get(j).getHasEnough());
                     }
                 }
-                
-                    }
                     
                     break;
                 case 5:
@@ -487,6 +493,7 @@ public class Main {
                     break;
                 case 6:
                 FileWriter f = new FileWriter(FILE_NAME);
+                f.write("");
                 f.close();
                 System.out.println("All saved recipes cleared.");
                     break;
